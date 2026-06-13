@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alex Styles — UI/UX Designer & Creative Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --ink:      #0d0d0f;
+      --paper:    #f8f7f4;
+      --mid:      #6b6b72;
+      --accent:   #5548e8;     /* electric indigo — the signature hue */
+      --accent2:  #e84855;     /* contrast pop for tags */
+      --surface:  #ffffff;
+      --border:   #e2e1de;
+      --radius:   12px;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Inter', sans-serif;
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    img { max-width: 100%; display: block; }
+    a  { color: inherit; text-decoration: none; }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 48px;
+      background: rgba(248,247,244,.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.06); }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--mid);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: .875rem !important;
+      font-weight: 500 !important;
+      transition: opacity .2s, transform .2s !important;
+    }
+    .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 48px 80px;
+      gap: 60px;
+    }
+    .hero-text { max-width: 560px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .8rem; font-weight: 500; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      margin-bottom: 24px;
+    }
+    h1 .highlight {
+      position: relative;
+      color: var(--accent);
+      display: inline-block;
+    }
+    h1 .highlight::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 2px; right: 0;
+      height: 6px;
+      background: var(--accent);
+      opacity: .15;
+      border-radius: 2px;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--mid);
+      max-width: 440px;
+      margin-bottom: 40px;
+    }
+    .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: .95rem;
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(85,72,232,.3);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 28px rgba(85,72,232,.45); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--ink); background: var(--surface); }
+
+    /* Signature element: floating design card */
+    .hero-card {
+      position: relative;
+      background: var(--surface);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.1);
+      aspect-ratio: 4/5;
+      max-height: 520px;
+    }
+    .hero-card-inner {
+      height: 100%;
+      background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 50%, #fce7f3 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px;
+    }
+    .card-mockup {
+      position: absolute;
+      top: 32px; left: 32px; right: 32px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.08);
+    }
+    .mockup-bar { display: flex; gap: 6px; margin-bottom: 16px; }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #febc2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+    .mockup-lines { display: flex; flex-direction: column; gap: 8px; }
+    .mockup-line {
+      height: 10px; border-radius: 5px;
+      background: var(--border);
+    }
+    .mockup-line.accent { background: var(--accent); opacity: .35; }
+    .mockup-line.short { width: 55%; }
+    .mockup-block {
+      margin-top: 14px;
+      height: 64px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(85,72,232,.15), rgba(232,72,85,.1));
+    }
+    .card-label {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .card-sub { font-size: .8rem; color: var(--mid); margin-top: 4px; }
+    .card-badge {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: var(--accent);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+    }
+
+    /* ── Section base ──────────────────────────────────────────── */
+    section { padding: 96px 48px; }
+    .section-eyebrow {
+      font-size: .75rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .section-desc {
+      font-size: 1rem;
+      color: var(--mid);
+      max-width: 520px;
+      margin-bottom: 56px;
+    }
+
+    /* ── About ─────────────────────────────────────────────────── */
+    #about { background: var(--surface); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border-radius: 20px;
+      background: linear-gradient(160deg, #ede9fe, #c7d2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 6rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -.05em;
+      opacity: .6;
+    }
+    .about-stat-pill {
+      position: absolute;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.1);
+      font-family: var(--font-display);
+    }
+    .about-stat-pill .num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .about-stat-pill .lbl {
+      font-size: .75rem;
+      color: var(--mid);
+      font-family: var(--font-body);
+    }
+    .stat-top    { bottom: -20px; right: -20px; }
+    .stat-bottom { top: 40px; left: -24px; }
+
+    .about-content h2 { margin-bottom: 16px; }
+    .about-content p { color: var(--mid); margin-bottom: 20px; font-size: .975rem; }
+    .skills-grid {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px;
+    }
+    .skill-tag {
+      background: var(--paper);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--ink);
+      transition: border-color .2s, background .2s, transform .2s;
+      cursor: default;
+    }
+    .skill-tag:hover {
+      border-color: var(--accent);
+      background: #ede9fe;
+      transform: translateY(-2px);
+    }
+
+    /* ── Work / Projects ───────────────────────────────────────── */
+    #work { background: var(--paper); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .project-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer;
+      position: relative;
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.1);
+    }
+    .project-thumb {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-thumb::after {
+      content: 'View Case Study';
+      position: absolute;
+      inset: 0;
+      background: rgba(85,72,232,.9);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .project-card:hover .project-thumb::after { opacity: 1; }
+    .p1 .project-thumb { background: linear-gradient(135deg, #ede9fe, #c7d2fe); }
+    .p2 .project-thumb { background: linear-gradient(135deg, #fce7f3, #fecdd3); }
+    .p3 .project-thumb { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+    .project-body { padding: 24px; }
+    .project-tags { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .ptag {
+      font-size: .7rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--accent);
+      background: #ede9fe;
+      padding: 3px 10px; border-radius: 100px;
+    }
+    .ptag.red { color: var(--accent2); background: #fff1f2; }
+    .ptag.green { color: #059669; background: #d1fae5; }
+    .project-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -.01em;
+    }
+    .project-body p { font-size: .875rem; color: var(--mid); }
+
+    /* ── Services ──────────────────────────────────────────────── */
+    #services { background: var(--ink); color: #fff; }
+    #services .section-eyebrow { color: #a5b4fc; }
+    #services h2 { color: #fff; }
+    #services .section-desc { color: rgba(255,255,255,.5); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      border: 2px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .service-item {
+      padding: 40px 36px;
+      background: rgba(255,255,255,.03);
+      border-right: 2px solid rgba(255,255,255,.08);
+      transition: background .3s;
+      position: relative;
+    }
+    .service-item:last-child { border-right: none; }
+    .service-item:hover { background: rgba(85,72,232,.15); }
+    .service-icon {
+      width: 48px; height: 48px;
+      background: var(--accent);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+    }
+    .service-item h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .service-item p { font-size: .875rem; color: rgba(255,255,255,.5); line-height: 1.7; }
+
+    /* ── Process ───────────────────────────────────────────────── */
+    #process { background: var(--surface); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      counter-reset: step;
+    }
+    .process-step {
+      padding: 32px 28px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      position: relative;
+      transition: border-color .2s, transform .2s;
+    }
+    .process-step:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      opacity: .12;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .process-step h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .process-step p { font-size: .85rem; color: var(--mid); }
+
+    /* ── Contact ───────────────────────────────────────────────── */
+    #contact {
+      background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+      color: #fff;
+      text-align: center;
+    }
+    #contact h2 { color: #fff; }
+    #contact .section-desc { color: rgba(255,255,255,.7); max-width: 440px; margin: 0 auto 48px; }
+    #contact .section-eyebrow { color: rgba(255,255,255,.7); }
+    .contact-form {
+      max-width: 540px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-input, .form-textarea {
+      background: rgba(255,255,255,.1);
+      border: 1.5px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: .95rem;
+      transition: border-color .2s, background .2s;
+      width: 100%;
+      outline: none;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,.45); }
+    .form-input:focus, .form-textarea:focus {
+      border-color: rgba(255,255,255,.7);
+      background: rgba(255,255,255,.15);
+    }
+    .form-textarea { resize: vertical; min-height: 130px; }
+    .btn-white {
+      background: #fff;
+      color: var(--accent);
+      font-weight: 600;
+      align-self: center;
+      padding: 14px 40px;
+    }
+    .btn-white:hover { background: #ede9fe; transform: translateY(-2px); }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,.45);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer .logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+    footer .logo span { color: var(--accent); }
+    .social-links { display: flex; gap: 20px; }
+    .social-links a {
+      font-size: .85rem;
+      transition: color .2s;
+    }
+    .social-links a:hover { color: #fff; }
+    footer p { font-size: .8rem; }
+
+    /* ── Modal ─────────────────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(13,13,15,.7);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn .2s ease; }
+    .modal {
+      background: var(--surface);
+      border-radius: 24px;
+      max-width: 600px;
+      width: 100%;
+      padding: 48px;
+      position: relative;
+      animation: slideUp .3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute; top: 20px; right: 20px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: none; cursor: pointer;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      margin-bottom: 8px;
+    }
+    .modal p { color: var(--mid); font-size: .95rem; margin-bottom: 16px; }
+    .modal-thumb {
+      height: 200px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+    .modal-section { margin-bottom: 24px; }
+    .modal-section h4 {
+      font-family: var(--font-display);
+      font-size: .95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    /* ── Tooltip ───────────────────────────────────────────────── */
+    [data-tooltip] {
+      position: relative;
+    }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: var(--ink);
+      color: #fff;
+      font-size: .75rem;
+      padding: 5px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    [data-tooltip]:hover::after { opacity: 1; }
+
+    /* ── Animations ────────────────────────────────────────────── */
+    @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      #hero { grid-template-columns: 1fr; padding: 120px 24px 60px; }
+      .hero-card { max-height: 300px; aspect-ratio: auto; }
+      .about-grid { grid-template-columns: 1fr; }
+      .projects-grid, .services-grid, .process-steps { grid-template-columns: 1fr 1fr; }
+      nav { padding: 16px 24px; }
+      section { padding: 72px 24px; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .projects-grid, .process-steps { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-item { border-right: none; border-bottom: 2px solid rgba(255,255,255,.08); }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+      .hero-card { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────────── -->
+  <nav id="navbar">
+    <div class="nav-logo">Alex<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact" class="nav-cta">Let's talk</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">UI/UX Designer & Developer</div>
+      <h1>Crafting<br><span class="highlight">experiences</span><br>that connect.</h1>
+      <p class="hero-desc">
+        I turn complex problems into elegant digital products — from initial wireframe to polished, production-ready interface.
+      </p>
+      <div class="hero-actions">
+        <a href="#work" class="btn btn-primary" data-tooltip="View selected projects">See my work</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-inner">
+        <div class="card-badge">Available for work</div>
+        <div class="card-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+          </div>
+          <div class="mockup-lines">
+            <div class="mockup-line accent"></div>
+            <div class="mockup-line short"></div>
+            <div class="mockup-line"></div>
+          </div>
+          <div class="mockup-block"></div>
+        </div>
+        <div class="card-label">Alex Styles<br>Portfolio 2025</div>
+        <div class="card-sub">UI/UX · Interaction Design · Development</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── About ──────────────────────────────────────────────── -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-photo">AS</div>
+        <div class="about-stat-pill stat-top">
+          <div class="num">40+</div>
+          <div class="lbl">Projects shipped</div>
+        </div>
+        <div class="about-stat-pill stat-bottom">
+          <div class="num">5★</div>
+          <div class="lbl">Client satisfaction</div>
+        </div>
+      </div>
+      <div class="about-content reveal">
+        <div class="section-eyebrow">About me</div>
+        <h2>Designer, builder, problem solver.</h2>
+        <p>
+          Hi, I'm Alex — a UI/UX designer and front-end developer based in San Francisco. I specialise in turning user research into clean, purposeful interfaces that actually get used.
+        </p>
+        <p>
+          With a background in both visual design and engineering, I bridge the gap between what looks great and what works great. My process is research-first and iteration-heavy.
+        </p>
+        <div class="skills-grid">
+          <span class="skill-tag" data-tooltip="Industry-standard design tool">Figma</span>
+          <span class="skill-tag" data-tooltip="Usability testing & research">User Research</span>
+          <span class="skill-tag" data-tooltip="Mobile-first layout systems">Responsive CSS</span>
+          <span class="skill-tag" data-tooltip="React component architecture">React</span>
+          <span class="skill-tag" data-tooltip="Micro-interactions & motion">Animation</span>
+          <span class="skill-tag" data-tooltip="User-centered ideation">Design Thinking</span>
+          <span class="skill-tag" data-tooltip="Consistency at scale">Design Systems</span>
+          <span class="skill-tag" data-tooltip="Inclusive design practices">Accessibility</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Work ───────────────────────────────────────────────── -->
+  <section id="work">
+    <div class="section-eyebrow">Selected work</div>
+    <h2>Projects that matter.</h2>
+    <p class="section-desc">
+      Each project below represents a real design challenge — from discovery through to delivery.
+    </p>
+    <div class="projects-grid">
+      <div class="project-card p1 reveal" data-modal="modal1">
+        <div class="project-thumb">🏦</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="ptag">UX Research</span>
+            <span class="ptag">Figma</span>
+          </div>
+          <h3>FinTrack Dashboard Redesign</h3>
+          <p>Reduced task-completion time by 38% through a full UX overhaul of a personal finance app used by 200k users.</p>
+        </div>
+      </div>
+      <div class="project-card p2 reveal" data-modal="modal2" style="transition-delay:.1s">
+        <div class="project-thumb">🛍️</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="ptag red">E-commerce</span>
+            <span class="ptag red">Interaction</span>
+          </div>
+          <h3>Bloom Shop — Mobile Experience</h3>
+          <p>End-to-end mobile redesign for a sustainable fashion brand, increasing conversion rate by 24% post-launch.</p>
+        </div>
+      </div>
+      <div class="project-card p3 reveal" data-modal="modal3" style="transition-delay:.2s">
+        <div class="project-thumb">🌿</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="ptag green">Design System</span>
+            <span class="ptag green">React</span>
+          </div>
+          <h3>Leafy — Component Library</h3>
+          <p>Built a 60+ component design system adopted across three product teams, cutting new-feature dev time in half.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ───────────────────────────────────────────── -->
+  <section id="services">
+    <div class="section-eyebrow">What I do</div>
+    <h2>Design-to-code, end to end.</h2>
+    <p class="section-desc">From strategy to shipping — I work at every layer of the product.</p>
+    <div class="services-grid">
+      <div class="service-item reveal">
+        <div class="service-icon">🔍</div>
+        <h3>UX Research & Strategy</h3>
+        <p>User interviews, competitive analysis, journey mapping, and insight synthesis to ground every decision in evidence.</p>
+      </div>
+      <div class="service-item reveal" style="transition-delay:.1s">
+        <div class="service-icon">✏️</div>
+        <h3>UI Design & Prototyping</h3>
+        <p>High-fidelity mockups, interactive Figma prototypes, and design systems built for handoff and scale.</p>
+      </div>
+      <div class="service-item reveal" style="transition-delay:.2s">
+        <div class="service-icon">⚡</div>
+        <h3>Front-End Development</h3>
+        <p>Pixel-perfect HTML, CSS, and React implementation — responsive, accessible, and production-ready from day one.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Process ────────────────────────────────────────────── -->
+  <section id="process">
+    <div class="section-eyebrow">How I work</div>
+    <h2>A process built on clarity.</h2>
+    <p class="section-desc">Four phases that keep projects on track and stakeholders aligned.</p>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">01</div>
+        <h3>Discover</h3>
+        <p>Stakeholder interviews, user research, and landscape analysis to define the real problem.</p>
+      </div>
+      <div class="process-step reveal" style="transition-delay:.1s">
+        <div class="step-num">02</div>
+        <h3>Define</h3>
+        <p>Synthesise findings into personas, user flows, and a clear design brief that aligns the team.</p>
+      </div>
+      <div class="process-step reveal" style="transition-delay:.2s">
+        <div class="step-num">03</div>
+        <h3>Design</h3>
+        <p>Rapid wireframing, high-fidelity UI, motion design, and iterative prototype testing with real users.</p>
+      </div>
+      <div class="process-step reveal" style="transition-delay:.3s">
+        <div class="step-num">04</div>
+        <h3>Deliver</h3>
+        <p>Developer-ready assets, annotated specs, component library, and post-launch measurement.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ────────────────────────────────────────────── -->
+  <section id="contact">
+    <div class="section-eyebrow">Contact</div>
+    <h2>Let's build something great.</h2>
+    <p class="section-desc">Have a project in mind or just want to say hi? I'm currently available for freelance and contract work.</p>
+    <form class="contact-form" onsubmit="handleFormSubmit(event)">
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Your name" required />
+        <input class="form-input" type="email" placeholder="Email address" required />
+      </div>
+      <input class="form-input" type="text" placeholder="Project type (e.g. App redesign)" />
+      <textarea class="form-textarea" placeholder="Tell me about your project…" required></textarea>
+      <button type="submit" class="btn btn-white">Send message →</button>
+    </form>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer>
+    <div class="logo">Alex<span>.</span></div>
+    <p>© 2025 Alex Styles. All rights reserved.</p>
+    <div class="social-links">
+      <a href="#" data-tooltip="GitHub">GitHub</a>
+      <a href="#" data-tooltip="LinkedIn">LinkedIn</a>
+      <a href="#" data-tooltip="Dribbble">Dribbble</a>
+    </div>
+  </footer>
+
+  <!-- ── Modals ──────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal1" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModalById('modal1')">✕</button>
+      <div class="modal-thumb" style="background: linear-gradient(135deg,#ede9fe,#c7d2fe)">🏦</div>
+      <h3>FinTrack Dashboard Redesign</h3>
+      <div class="modal-section">
+        <h4>Challenge</h4>
+        <p>200,000+ users were struggling with a fragmented dashboard — key actions were buried 3+ taps deep, leading to high drop-off in core financial tracking flows.</p>
+      </div>
+      <div class="modal-section">
+        <h4>Approach</h4>
+        <p>Conducted 14 user interviews and analysed session recordings to identify friction points. Built a revised information architecture with progressive disclosure, prioritising the top 3 user goals on the home screen.</p>
+      </div>
+      <div class="modal-section">
+        <h4>Outcome</h4>
+        <p>38% reduction in task-completion time. Net Promoter Score rose from 32 to 58 in three months post-launch. The redesigned dashboard became the product team's template for subsequent feature work.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal2" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModalById('modal2')">✕</button>
+      <div class="modal-thumb" style="background: linear-gradient(135deg,#fce7f3,#fecdd3)">🛍️</div>
+      <h3>Bloom Shop — Mobile Experience</h3>
+      <div class="modal-section">
+        <h4>Challenge</h4>
+        <p>Bloom's mobile site had a 74% cart-abandonment rate and poor accessibility scores, costing significant revenue each month.</p>
+      </div>
+      <div class="modal-section">
+        <h4>Approach</h4>
+        <p>End-to-end mobile redesign focused on one-thumb reachability, streamlined checkout (reduced from 6 steps to 3), and WCAG AA compliance. Ran five rounds of usability testing with the target customer segment.</p>
+      </div>
+      <div class="modal-section">
+        <h4>Outcome</h4>
+        <p>Conversion rate increased by 24%. Accessibility score jumped from 61 to 96. Featured as a case study at a major sustainable fashion conference.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal3" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModalById('modal3')">✕</button>
+      <div class="modal-thumb" style="background: linear-gradient(135deg,#d1fae5,#a7f3d0)">🌿</div>
+      <h3>Leafy — Component Library</h3>
+      <div class="modal-section">
+        <h4>Challenge</h4>
+        <p>Three product teams were duplicating UI work, leading to inconsistent experiences and wasted engineering time across a growing SaaS platform.</p>
+      </div>
+      <div class="modal-section">
+        <h4>Approach</h4>
+        <p>Audited existing UI patterns across all products, identified 60 reusable components, and built a Figma library alongside a React/Storybook implementation with full documentation and accessibility annotations.</p>
+      </div>
+      <div class="modal-section">
+        <h4>Outcome</h4>
+        <p>New-feature development time cut by 50%. Design-to-engineer handoff time reduced from days to hours. The library is now the foundation for all new product work at the company.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Scripts ─────────────────────────────────────────────── -->
+  <script>
+    // Navbar shadow on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Project card → modal
+    document.querySelectorAll('[data-modal]').forEach(card => {
+      card.addEventListener('click', () => {
+        document.getElementById(card.dataset.modal).classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeModal(event) {
+      if (event.target === event.currentTarget) {
+        event.currentTarget.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function closeModalById(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Contact form
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = 'Message sent ✓';
+      btn.style.background = '#d1fae5';
+      btn.style.color = '#059669';
+      e.target.reset();
+      setTimeout(() => {
+        btn.textContent = 'Send message →';
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
